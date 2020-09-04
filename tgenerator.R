@@ -7,10 +7,9 @@ library('tibble')
 library('dplyr')
 library('ggnewscale')
 library('viridis')
-
 require(gridExtra)
 
-setwd('/Users/hussais/Documents/R_plots/GGtree_code/h3neut_VCM')
+#setwd('/Users/hussais/Documents/R_plots/GGtree_code/h3neut_VCM')
 
 newick_file <- read.newick("subs.newick")
 tree_file <- as_tibble(newick_file)
