@@ -7,9 +7,10 @@ library('tibble')
 library('dplyr')
 library('ggnewscale')
 library('viridis')
+
 require(gridExtra)
 
-#setwd('/Users/hussais/Documents/R_plots/GGtree_code/h3neut_VCM')
+# setwd('/Users/hussais/Documents/R_plots/GGtree_code/h3neut_VCM')
 
 newick_file <- read.newick("subs.newick")
 tree_file <- as_tibble(newick_file)
@@ -38,30 +39,27 @@ region_df <- data.frame(region)
 rownames(region_df) <- region_df$label
 region_df$label <- NULL
 
-# # #same for fold titres
-# fold_titres <- read.csv("h3neut_fold.csv", stringsAsFactors=FALSE)
-# 
-# # ...and then convert to dataframe
-# fold_titres <- apply(fold_titres, 2, function(x)gsub('\\s+', '',x))
-# fold_titres_df <- data.frame(fold_titres)
-# 
-# rownames(fold_titres_df) <- fold_titres_df$label
-# fold_titres_df$label <- NULL
+# #same for fold titres
+fold_titres <- read.csv("h3neut_fold.csv", stringsAsFactors=FALSE)
+
+# ...and then convert to dataframe
+fold_titres <- apply(fold_titres, 2, function(x)gsub('\\s+', '',x))
+fold_titres_df <- data.frame(fold_titres)
+
+rownames(fold_titres_df) <- fold_titres_df$label
+fold_titres_df$label <- NULL
 
 options(digits=6) # to keep two decimal spaces
 
-# read the file
-fold_titres <- read.csv("h3_neut_fold.csv", stringsAsFactors=FALSE)
-
 # Convert values etc
-fold_titres[fold_titres == ""] <- "0"
-fold_titres[fold_titres == "<4"] <- "1"
+fold_titres[fold_titres == "REF"] <- "0"
+fold_titres[fold_titres == "L4"] <- "1"
 fold_titres[fold_titres == "4"] <- "2"
 fold_titres[fold_titres == "8"] <- "3"
-fold_titres[fold_titres == ">8"] <- "4"
-fold_titres[fold_titres == ">=160"] <- "5"
-fold_titres[fold_titres == ">=160_NO"] <- "6"
-fold_titres[fold_titres == "<"] <- "7"
+fold_titres[fold_titres == "G8"] <- "4"
+fold_titres[fold_titres == "HG160"] <- "5"
+fold_titres[fold_titres == "NH160"] <- "6"
+fold_titres[fold_titres == "NR"] <- "7"
 # define required constant levels 
 titre_levels <- c(0,1,2,3,4,5,6,7)
 
@@ -75,9 +73,11 @@ fold_titres_df <- data.frame(fold_titres)
 # convert rownames to label
 fold_titres_df$label <- NULL
 
+
 # convert the dataframe to numeric
 fold_titres_df <- mutate_all(fold_titres_df[], function(x) as.numeric(as.character(x)))
 rownames(fold_titres_df) <- data.frame(fold_titres)$label
+
 
 # apply the levels to the dataframe columns
 for (i in 1:ncol(fold_titres_df)) {
@@ -94,14 +94,14 @@ options(digits=6) # to keep two decimal spaces
 fold_titres <- read.csv("h3_h1_fold.csv", stringsAsFactors=FALSE)
 
 # Convert values etc
-fold_titres[fold_titres == ""] <- "0"
-fold_titres[fold_titres == "<4"] <- "1"
+fold_titres[fold_titres == "REF"] <- "0"
+fold_titres[fold_titres == "L4"] <- "1"
 fold_titres[fold_titres == "4"] <- "2"
 fold_titres[fold_titres == "8"] <- "3"
-fold_titres[fold_titres == ">8"] <- "4"
-fold_titres[fold_titres == ">=160"] <- "5"
-fold_titres[fold_titres == ">=160_NO"] <- "6"
-fold_titres[fold_titres == "<"] <- "7"
+fold_titres[fold_titres == "G8"] <- "4"
+fold_titres[fold_titres == "HG160"] <- "5"
+fold_titres[fold_titres == "NH160"] <- "6"
+fold_titres[fold_titres == "NR"] <- "7"
 # define required constant levels
 titre_levels_hi <- c(0,1,2,3,4,5,6,7)
 
@@ -115,9 +115,11 @@ fold_titres_hi_df <- data.frame(fold_titres)
 # convert rownames to label
 fold_titres_hi_df$label <- NULL
 
+
 # convert the dataframe to numeric
 fold_titres_hi_df <- mutate_all(fold_titres_hi_df[], function(x) as.numeric(as.character(x)))
 rownames(fold_titres_hi_df) <- data.frame(fold_titres_hi)$label
+
 
 # apply the levels to the dataframe columns
 for (i in 1:ncol(fold_titres_hi_df)) {
@@ -135,14 +137,13 @@ tree_fig4 <- gheatmap(tree_fig3,region_df, offset = 0.055, width = 0.02, font.si
 tree_fig5 <- tree_fig4 + new_scale_fill()
 
 tree_fig6 <- gheatmap(tree_fig5, fold_titres_df, offset = 0.062, width = 0.14, font.size = 1.3, colnames_angle = 270, colnames_offset_y = -11) + scale_fill_manual(values = cols, name = "VN/HI fold change", labels = labs) + theme(legend.justification = c("centre")) + theme(legend.title = element_text(size = 8)) + theme(legend.text = element_text(size = 6)) + theme(legend.key.size =  unit(0.05, "in")) + theme(legend.position = c(0.2, 0.8)) + theme(plot.margin=margin(0, 50, 15, 0)) + coord_cartesian(clip = 'off')
-tree_fig6
-
+# tree_fig6
 tree_fig7 <- tree_fig6 + new_scale_fill()
 
 tree_fig8 <- gheatmap(tree_fig7, fold_titres_hi_df, offset = 0.1, width = 0.14, font.size = 1.3, colnames_angle = 270, colnames_offset_y = -11) + scale_fill_manual(values = cols_hi, labels = labs_hi, guide=FALSE)
-tree_fig8
+#tree_fig8
 
-ggsave(filename="vcm_tree_heatmap.pdf", 
+ggsave(filename='vcm_heatmap.pdf', # "vcm_tree_heatmap.pdf", 
        plot = tree_fig8, 
        device = cairo_pdf, 
        width = 11.69, 
