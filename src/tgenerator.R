@@ -7,10 +7,9 @@ library('tibble')
 library('dplyr')
 library('ggnewscale')
 library('viridis')
-
 require(gridExtra)
 
-# setwd('/Users/hussais/Documents/R_plots/GGtree_code/h3neut_VCM')
+#setwd('/Users/hussais/Documents/R_plots/GGtree_code/h3neut_VCM/WHO')
 
 newick_file <- read.newick("subs.newick")
 tree_file <- as_tibble(newick_file)
@@ -39,17 +38,21 @@ region_df <- data.frame(region)
 rownames(region_df) <- region_df$label
 region_df$label <- NULL
 
-# #same for fold titres
-fold_titres <- read.csv("h3neut_fold.csv", stringsAsFactors=FALSE)
+# # #same for fold titres
+# fold_titres <- read.csv("h3neut_fold.csv", stringsAsFactors=FALSE)
+# 
+# # ...and then convert to dataframe
+# fold_titres <- apply(fold_titres, 2, function(x)gsub('\\s+', '',x))
+# fold_titres_df <- data.frame(fold_titres)
+# 
+# rownames(fold_titres_df) <- fold_titres_df$label
+# fold_titres_df$label <- NULL
 
-# ...and then convert to dataframe
-fold_titres <- apply(fold_titres, 2, function(x)gsub('\\s+', '',x))
-fold_titres_df <- data.frame(fold_titres)
-
-rownames(fold_titres_df) <- fold_titres_df$label
-fold_titres_df$label <- NULL
-
+####### IOANNIS
 options(digits=6) # to keep two decimal spaces
+
+# read the file
+fold_titres <- read.csv("h3_neut_fold.csv", stringsAsFactors=FALSE)
 
 # Convert values etc
 fold_titres[fold_titres == "REF"] <- "0"
@@ -130,6 +133,8 @@ for (i in 1:ncol(fold_titres_hi_df)) {
 cols_hi <- c("black","azure3", "khaki1","goldenrod1","darkorange2","green","skyblue1","red")
 labs_hi <- c("Ref","< 4","4","8","> 8",">= 160 (when homolgous titre >= 2560)", ">= 160 (No homologous titre)", "<" )
 
+
+
 tree_fig3 <- tree_fig2 + new_scale_fill()
 tree_fig4 <- gheatmap(tree_fig3,region_df, offset = 0.055, width = 0.02, font.size = 3, colnames_angle = 270, colnames_offset_y = -5.5) + scale_fill_viridis_d(option = "D", name = "WHO Region")
 
@@ -137,15 +142,17 @@ tree_fig4 <- gheatmap(tree_fig3,region_df, offset = 0.055, width = 0.02, font.si
 tree_fig5 <- tree_fig4 + new_scale_fill()
 
 tree_fig6 <- gheatmap(tree_fig5, fold_titres_df, offset = 0.062, width = 0.14, font.size = 1.3, colnames_angle = 270, colnames_offset_y = -11) + scale_fill_manual(values = cols, name = "VN/HI fold change", labels = labs) + theme(legend.justification = c("centre")) + theme(legend.title = element_text(size = 8)) + theme(legend.text = element_text(size = 6)) + theme(legend.key.size =  unit(0.05, "in")) + theme(legend.position = c(0.2, 0.8)) + theme(plot.margin=margin(0, 50, 15, 0)) + coord_cartesian(clip = 'off')
-# tree_fig6
+tree_fig6
+
+
 tree_fig7 <- tree_fig6 + new_scale_fill()
 
 tree_fig8 <- gheatmap(tree_fig7, fold_titres_hi_df, offset = 0.1, width = 0.14, font.size = 1.3, colnames_angle = 270, colnames_offset_y = -11) + scale_fill_manual(values = cols_hi, labels = labs_hi, guide=FALSE)
-#tree_fig8
+tree_fig8
 
-ggsave(filename='vcm_heatmap.pdf', # "vcm_tree_heatmap.pdf", 
-       plot = tree_fig8, 
-       device = cairo_pdf, 
-       width = 11.69, 
-       height = 8.27, 
+ggsave(filename="vcm_tree_heatmap.pdf", 
+       plot = tree_fig8,
+       device = cairo_pdf,
+       width = 11.69,
+       height = 8.27,
        units = "in")
