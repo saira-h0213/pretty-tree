@@ -1,0 +1,8 @@
+Script installation guide - Step by Step
+========================================
+
+1. Download R for windows and install from this file https://cran.ma.imperial.ac.uk/bin/windows/base/R-4.0.2-win.exe
+
+2. Create a new folder (e.g. Desktop/pretty-trees) and save there the file run-pretty-tree.bat
+
+3. Now just right click the file and click RUN AS ADMINISTRATOR option. This will install all the required packages and also run the program! ENSURE all the required input files are in the folder. It will output a pdf on the same folder! That's all folks.
