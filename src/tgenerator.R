@@ -38,21 +38,17 @@ region_df <- data.frame(region)
 rownames(region_df) <- region_df$label
 region_df$label <- NULL
 
-# # #same for fold titres
-# fold_titres <- read.csv("h3neut_fold.csv", stringsAsFactors=FALSE)
-# 
-# # ...and then convert to dataframe
-# fold_titres <- apply(fold_titres, 2, function(x)gsub('\\s+', '',x))
-# fold_titres_df <- data.frame(fold_titres)
-# 
-# rownames(fold_titres_df) <- fold_titres_df$label
-# fold_titres_df$label <- NULL
-
-####### IOANNIS
-options(digits=6) # to keep two decimal spaces
-
-# read the file
+# #same for fold titres
 fold_titres <- read.csv("h3_neut_fold.csv", stringsAsFactors=FALSE)
+
+# ...and then convert to dataframe
+fold_titres <- apply(fold_titres, 2, function(x)gsub('\\s+', '',x))
+fold_titres_df <- data.frame(fold_titres)
+
+rownames(fold_titres_df) <- fold_titres_df$label
+fold_titres_df$label <- NULL
+
+options(digits=6) # to keep two decimal spaces
 
 # Convert values etc
 fold_titres[fold_titres == "REF"] <- "0"
